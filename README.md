@@ -29,7 +29,52 @@ body{
   overflow-x:hidden;
 }
 
-/* Cursor glow */
+/* ===== Animated background ===== */
+.bg{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background:
+    radial-gradient(900px 600px at 15% 10%, rgba(255,140,26,.12), transparent 60%),
+    radial-gradient(900px 600px at 80% 20%, rgba(255,77,0,.10), transparent 60%),
+    radial-gradient(900px 600px at 60% 90%, rgba(255,140,26,.10), transparent 60%),
+    linear-gradient(180deg, #060606, #000);
+}
+
+.orbs{
+  position:fixed;
+  inset:-10%;
+  z-index:-1;
+  filter: blur(40px);
+  opacity:.85;
+  pointer-events:none;
+}
+.orb{
+  position:absolute;
+  width:520px;height:520px;
+  border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,140,26,.55), rgba(255,77,0,.08) 65%, transparent 70%);
+  animation: float 12s ease-in-out infinite;
+}
+.orb:nth-child(2){
+  width:640px;height:640px;
+  left:55%; top:10%;
+  background: radial-gradient(circle at 40% 40%, rgba(255,77,0,.45), rgba(255,140,26,.10) 62%, transparent 70%);
+  animation-duration: 16s;
+}
+.orb:nth-child(3){
+  width:480px;height:480px;
+  left:25%; top:65%;
+  background: radial-gradient(circle at 35% 35%, rgba(255,140,26,.38), rgba(255,77,0,.10) 62%, transparent 70%);
+  animation-duration: 14s;
+}
+@keyframes float{
+  0%{ transform: translate3d(-20px,-10px,0) scale(1); }
+  50%{ transform: translate3d(30px,20px,0) scale(1.06); }
+  100%{ transform: translate3d(-20px,-10px,0) scale(1); }
+}
+
+/* ===== Cursor glow ===== */
 .cursor-glow{
   position:fixed;
   width:520px;height:520px;
@@ -41,7 +86,7 @@ body{
   mix-blend-mode: screen;
 }
 
-/* HEADER */
+/* ===== Header ===== */
 header{
   position:sticky;
   top:0;
@@ -92,12 +137,42 @@ nav a{
   color:var(--muted);
   text-decoration:none;
   font-size:14px;
+  position:relative;
   padding:8px 8px;
   border-radius:10px;
 }
-nav a:hover{ color:#fff; background:rgba(255,255,255,.06); }
+nav a:hover{
+  color:#fff;
+  background: rgba(255,255,255,.06);
+}
+.actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.btn{
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+  color:#fff;
+  padding:10px 12px;
+  border-radius:14px;
+  font-size:14px;
+  cursor:pointer;
+  transition:.25s;
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  text-decoration:none;
+}
+.btn:hover{ transform: translateY(-2px); border-color: rgba(255,140,26,.55); box-shadow: var(--glow); }
+.btn.primary{
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color:#0a0a0a;
+  border:0;
+  font-weight:800;
+}
 
-/* MOBILE MENU */
+/* Mobile menu */
 .burger{
   display:none;
   width:44px;height:44px;
@@ -106,6 +181,7 @@ nav a:hover{ color:#fff; background:rgba(255,255,255,.06); }
   background: rgba(255,255,255,.05);
   cursor:pointer;
 }
+.burger:active{ transform: scale(.98); }
 .burger span{
   display:block;
   width:18px;height:2px;
@@ -129,61 +205,182 @@ nav a:hover{ color:#fff; background:rgba(255,255,255,.06); }
   color:#fff;
   text-decoration:none;
 }
+.mobile-nav a:hover{ border-color: rgba(255,140,26,.55); box-shadow: var(--glow); }
 
-/* LAYOUT */
+/* ===== Layout ===== */
 .container{
   max-width:1180px;
   margin:auto;
   padding:26px 18px 0;
 }
-section{ margin-top:84px; animation:fadeUp .8s ease both; }
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(30px);}
-  to{opacity:1;transform:translateY(0);}
-}
+section{ margin-top:84px; }
 h2{
+  margin:0 0 26px;
   font-size:30px;
-  margin-bottom:26px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-/* STATS LINKS */
-.stat a{
-  color: var(--muted);
-  text-decoration: none;
-  font-size:13px;
-  word-break: break-all;
+/* ===== Hero ===== */
+.hero{
+  margin-top:28px;
+  display:grid;
+  grid-template-columns: 1.25fr .75fr;
+  gap:22px;
+  align-items:stretch;
 }
-.stat a:hover{ color:#ff8c1a; }
+.hero-card{
+  background: var(--glass);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:28px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+  position:relative;
+  overflow:hidden;
+}
+.hero-card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: radial-gradient(700px 300px at 10% 10%, rgba(255,140,26,.18), transparent 60%);
+  opacity:.9;
+}
+.hero-card > *{ position:relative; }
+.kicker{
+  display:inline-flex;
+  gap:10px;
+  align-items:center;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.06);
+  color: #f0f0f0;
+  font-size:13px;
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background: #44ff8a;
+  box-shadow: 0 0 16px rgba(68,255,138,.45);
+}
+.hero h1{
+  margin:14px 0 10px;
+  font-size:44px;
+  line-height:1.05;
+}
+.hero p{
+  margin:0;
+  color:#d8d8d8;
+  line-height:1.8;
+  font-size:15px;
+}
+.hero-actions{
+  margin-top:18px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:18px;
+}
+.chip{
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+  color: var(--muted);
+  font-size:13px;
+}
 
-/* CARDS */
+/* ===== Side card ===== */
+.side{
+  display:grid;
+  gap:14px;
+}
+.side .mini{
+  background: var(--glass2);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:24px;
+  padding:18px;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
+}
+.mini-title{
+  font-weight:900;
+  margin:0 0 8px;
+}
+.stat{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 12px;
+  margin-top:10px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+}
+.stat b{ color:#fff; }
+.stat span{ color: var(--muted); }
+
+/* ===== Grid cards ===== */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap:18px;
 }
 .card{
-  background:var(--glass);
-  border:1px solid var(--border);
+  background: var(--glass);
+  border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   padding:18px;
-  backdrop-filter:blur(14px);
+  backdrop-filter: blur(14px);
   transition:.28s;
   position:relative;
   overflow:hidden;
 }
-.card:hover{
-  transform:translateY(-6px);
-  border-color:var(--accent);
-  box-shadow:var(--glow);
+.card::before{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(120deg, transparent, rgba(255,140,26,.12), transparent);
+  opacity:0;
+  transition:.28s;
 }
-.card h4{ margin:0 0 8px;font-size:16px; }
-.card p{ margin:0;font-size:13px;color:var(--muted); }
+.card:hover::before{ opacity:1; }
+.card:hover{
+  transform: translateY(-8px);
+  border-color: rgba(255,140,26,.55);
+  box-shadow: var(--glow);
+}
+.card h4{ margin:0 0 8px; font-size:16px; }
+.card p, .card a{
+  margin:0;
+  color: var(--muted);
+  font-size:13px;
+  line-height:1.5;
+  word-break: break-all;
+  text-decoration:none;
+}
+.card a:hover{ color:#fff; }
 
-/* COPY BLOCK */
+/* Copy + link styles */
 .card.copy{ cursor:pointer; }
+.row{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.copy-btn{
+  flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color:#fff;
+  border-radius:14px;
+  padding:8px 10px;
+  font-size:12px;
+  cursor:pointer;
+  transition:.2s;
+}
+.copy-btn:hover{ border-color: rgba(255,140,26,.55); box-shadow: var(--glow); transform: translateY(-1px); }
 .card.copy small{
   display:block;
   color:#7f7f7f;
@@ -191,21 +388,53 @@ h2{
   font-size:11px;
 }
 
-/* CONTACTS */
+/* Contacts */
 .contact{
-  display:flex;
-  gap:12px;
-  align-items:center;
+  display:flex; gap:12px; align-items:center;
 }
 .icon{
-  width:48px;height:48px;
-  border-radius:16px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  display:grid;place-items:center;
-  color:#0b0b0b;font-weight:1000;
+  width:48px;height:48px;border-radius:16px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: var(--glow);
+  display:grid; place-items:center;
+  color:#0b0b0b;
+  font-weight:1000;
 }
 
-/* FOOTER */
+/* Reveal animations */
+.reveal{ opacity:0; transform: translateY(22px); transition: .7s ease; }
+.reveal.show{ opacity:1; transform: translateY(0); }
+
+/* Toast */
+.toast{
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15,15,15,.85);
+  border: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(14px);
+  padding: 12px 14px;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  display:flex;
+  gap:10px;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition: .25s;
+  z-index:60;
+}
+.toast.show{ opacity:1; transform: translateX(-50%) translateY(-6px); }
+.toast i{
+  width:26px;height:26px;border-radius:10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display:grid; place-items:center;
+  color:#0b0b0b;
+  font-style:normal;
+  font-weight:900;
+}
+
 footer{
   margin-top:90px;
   padding:44px 18px;
@@ -213,63 +442,25 @@ footer{
   color:#6f6f6f;
   font-size:13px;
   border-top:1px solid rgba(255,255,255,.06);
-  background:rgba(0,0,0,.25);
+  background: rgba(0,0,0,.25);
 }
 
-/* HERO */
-.hero{
-  margin-top:28px;
-  display:grid;
-  grid-template-columns:1.25fr .75fr;
-  gap:22px;
-}
-.hero-card{
-  background:var(--glass2);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:28px;
-  backdrop-filter:blur(16px);
-  box-shadow:var(--shadow);
-}
-.hero-card h1{
-  margin:14px 0 10px;
-  font-size:44px;
-  line-height:1.05;
-}
-.hero-card p{ line-height:1.8;color:#d8d8d8;font-size:15px; }
-.hero-actions{
-  margin-top:18px;
-  display:flex;flex-wrap:wrap;
-  gap:10px;
-}
-.btn{
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.05);
-  color:#fff;padding:10px 14px;
-  border-radius:16px;font-size:14px;
-  cursor:pointer;text-decoration:none;
-  display:inline-flex;align-items:center;gap:8px;
-  transition:.25s;
-}
-.btn.primary{
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#000;border:0;font-weight:800;
-}
-.btn:hover{ transform:translateY(-2px);box-shadow:var(--glow); }
-
-@media (max-width:920px){
-  .hero{grid-template-columns:1fr;}
-  header nav{display:none;}
-  .burger{display:block;}
-  .hero-card h1{font-size:38px;}
+/* Responsive */
+@media (max-width: 920px){
+  .hero{ grid-template-columns: 1fr; }
+  .hero h1{ font-size: 38px; }
+  nav{ display:none; }
+  .burger{ display:block; }
+  .mobile-nav{ display:none; }
+  .mobile-nav.open{ display:block; }
 }
 </style>
 </head>
 
 <body>
-
+<div class="bg"></div>
 <div class="orbs">
-  <div class="orb"></div>
+  <div class="orb" style="left:-6%; top:5%"></div>
   <div class="orb"></div>
   <div class="orb"></div>
 </div>
@@ -308,107 +499,206 @@ footer{
 
 <div class="container">
 
-<div class="hero">
-  <div class="hero-card" id="about">
-    <h1>Артем <span>aka</span> <span style="color:#ff8c1a">Domik</span></h1>
-    <p>
-      Привет! Меня зовут Артем, в сети я известен как <b>Domik</b>.
-      Провожу стримы, играю в CS2, много общаюсь с чатом и создаю ламповую атмосферу.
-      <br><br>
-      Здесь ты можешь узнать больше обо мне, поддержать стрим или связаться напрямую.
-      Спасибо, что ты здесь 🧡
-    </p>
-  </div>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-card reveal show" id="about">
+      <div class="kicker"><span class="dot"></span> Онлайн-вайб • CS2 • Общение</div>
+      <h1>Артем<br><span style="color:#fff; opacity:.9">aka</span> <span style="background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Domik</span></h1>
+      <p>
+        Привет! Меня зовут Артем, в сети я известен как <b>Domik</b>.
+        Провожу стримы, играю в CS2, много общаюсь с чатом и создаю ламповую атмосферу.
+        <br><br>
+        Здесь ты можешь узнать больше обо мне, поддержать стрим или связаться напрямую.
+        Спасибо, что ты здесь 🧡
+      </p>
 
-  <div class="hero-card">
-    <div class="stat"><b>Подписчики</b><span>1 337</span></div>
-    <div class="stat"><b>Стримов в этом году</b><span>96</span></div>
-    <div class="stat"><b>Любимая игра</b><span>CS2</span></div>
-  </div>
-</div>
+      <div class="hero-actions">
+        <a class="btn primary" href="#support">💳 Поддержать</a>
+        <a class="btn" href="https://t.me/+YrEYNQy0OBYzYzg0" target="_blank" rel="noreferrer">💬 Чат</a>
+        <a class="btn" href="https://www.tiktok.com/@domikteam" target="_blank" rel="noreferrer">🎥 TikTok</a>
+      </div>
 
-<section id="support">
-  <h2>Поддержать меня</h2>
-  <div class="grid">
-    <div class="card copy" data-copy="DWQSsLZ1JYty7LHe2f11FKGFpx9bGenQ1SAqdGpPFUFX">
-      <h4>Solana</h4>
-      <p>Нажми чтобы скопировать</p>
+      <div class="chips">
+        <div class="chip">🎮 CS2: aim + chill</div>
+        <div class="chip">🧡 Комьюнити: DomikTeam</div>
+        <div class="chip">⚡ Стримы: регулярно</div>
+        <div class="chip">✨ Атмосфера: лампово</div>
+      </div>
     </div>
-    <div class="card copy" data-copy="bc1qkztctt0m825q0y0alqfhagvg2mqh6uwwhfgdah">
-      <h4>Bitcoin (BTC)</h4>
-      <p>Нажми чтобы скопировать</p>
-    </div>
-    <div class="card copy" data-copy="https://t.me/+YrEYNQy0OBYzYzg0">
-      <h4>Telegram Chat</h4>
-      <p>Нажми чтобы скопировать ссылку</p>
-    </div>
-    <a class="card" href="https://donatepay.ru/don/1451218" target="_blank" rel="noreferrer">
-      <h4>DonatePay</h4>
-      <p>Клик = перейти</p>
-    </a>
-    <a class="card" href="https://www.donationalerts.com/r/domik122" target="_blank" rel="noreferrer">
-      <h4>DonationAlerts</h4>
-      <p>Клик = перейти</p>
-    </a>
-  </div>
-</section>
 
-<section id="system">
-  <h2>Система стрима</h2>
-  <div class="grid">
-    <div class="card"><h4>CPU</h4><p>Intel Core i7-14700F</p></div>
-    <div class="card"><h4>GPU</h4><p>NVIDIA RTX 4070 SUPER</p></div>
-    <div class="card"><h4>RAM</h4><p>32 GB DDR5</p></div>
-    <div class="card"><h4>SSD</h4><p>Samsung 990 PRO 1TB</p></div>
-  </div>
-</section>
+    <div class="side">
+      <div class="mini reveal">
+        <p class="mini-title">Быстрые ссылки</p>
+        <div class="stat"><b>Telegram</b><span>t.me/domikteam1</span></div>
+        <div class="stat"><b>Chat</b><span>Вступить</span></div>
+        <div class="stat"><b>TikTok</b><span>@domikteam</span></div>
+      </div>
 
-<section id="contacts">
-  <h2>Контакты</h2>
-  <div class="grid">
-    <a class="card" href="https://t.me/domikteam1" target="_blank" rel="noreferrer">
-      <div class="contact"><div class="icon">TG</div><div><h4>Telegram</h4><p>@domikteam1</p></div></div>
-    </a>
-    <a class="card" href="https://t.me/+YrEYNQy0OBYzYzg0" target="_blank" rel="noreferrer">
-      <div class="contact"><div class="icon">💬</div><div><h4>Чат</h4><p>t.me/+YrEYNQ…</p></div></div>
-    </a>
-    <a class="card" href="https://www.tiktok.com/@domikteam" target="_blank" rel="noreferrer">
-      <div class="contact"><div class="icon">TT</div><div><h4>TikTok</h4><p>@domikteam</p></div></div>
-    </a>
+      <div class="mini reveal">
+        <p class="mini-title">Плашка стримера</p>
+        <div class="stat"><b>Ник</b><span>Domik</span></div>
+        <div class="stat"><b>Контент</b><span>CS2 + общение</span></div>
+        <div class="stat"><b>Стиль</b><span>ламповый</span></div>
+      </div>
+    </div>
   </div>
-</section>
+
+  <!-- SUPPORT -->
+  <section id="support" class="reveal">
+    <h2>Поддержать Domik</h2>
+    <div class="grid">
+
+      <div class="card copy" data-copy="DWQSsLZ1JYty7LHe2f11FKGFpx9bGenQ1SAqdGpPFUFX">
+        <div class="row">
+          <h4>Solana</h4>
+          <button class="copy-btn" type="button">Копировать</button>
+        </div>
+        <p>DWQSsLZ1JYty7LHe2f11FKGFpx9bGenQ1SAqdGpPFUFX</p>
+        <small>Нажми по карточке или по кнопке — адрес скопируется.</small>
+      </div>
+
+      <div class="card copy" data-copy="bc1qkztctt0m825q0y0alqfhagvg2mqh6uwwhfgdah">
+        <div class="row">
+          <h4>Bitcoin (BTC)</h4>
+          <button class="copy-btn" type="button">Копировать</button>
+        </div>
+        <p>bc1qkztctt0m825q0y0alqfhagvg2mqh6uwwhfgdah</p>
+        <small>Поддержка на развитие стримов и контента.</small>
+      </div>
+
+      <a class="card" href="https://donatepay.ru/don/1451218" target="_blank" rel="noreferrer">
+        <h4>DonatePay</h4>
+        <p>Кликабельно — откроется донат-страница</p>
+      </a>
+
+      <a class="card" href="https://www.donationalerts.com/r/domik122" target="_blank" rel="noreferrer">
+        <h4>DonationAlerts</h4>
+        <p>Кликабельно — донат с сообщением на стриме</p>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SYSTEM -->
+  <section id="system" class="reveal">
+    <h2>Игровая система</h2>
+    <div class="grid">
+      <div class="card"><h4>Процессор</h4><p>Intel(R) Core(TM) i7-14700F</p></div>
+      <div class="card"><h4>Видеокарта</h4><p>NVIDIA GeForce RTX 4070 SUPER</p></div>
+      <div class="card"><h4>Материнка</h4><p>ASUS TUF Gaming B760M-PLUS WiFi II</p></div>
+      <div class="card"><h4>Накопитель</h4><p>Samsung SSD 990 PRO 1 TB</p></div>
+      <div class="card"><h4>Блок питания</h4><p>CORSAIR RM850e</p></div>
+    </div>
+  </section>
+
+  <!-- CONTACTS -->
+  <section id="contacts" class="reveal">
+    <h2>Контакты</h2>
+    <div class="grid">
+      <a class="card" href="https://t.me/domikteam1" target="_blank" rel="noreferrer">
+        <div class="contact">
+          <div class="icon">TG</div>
+          <div>
+            <h4>Telegram</h4>
+            <p>t.me/domikteam1</p>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="https://t.me/+YrEYNQy0OBYzYzg0" target="_blank" rel="noreferrer">
+        <div class="contact">
+          <div class="icon">TC</div>
+          <div>
+            <h4>Telegram Chat</h4>
+            <p>Вступить в комьюнити</p>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="https://www.tiktok.com/@domikteam" target="_blank" rel="noreferrer">
+        <div class="contact">
+          <div class="icon">TT</div>
+          <div>
+            <h4>TikTok</h4>
+            <p>@domikteam</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
 
 </div>
 
 <footer>© Артем (Domik) • 2025</footer>
 
+<div class="toast" id="toast"><i>✓</i><span id="toastText">Скопировано!</span></div>
+
 <script>
-// burger
-document.getElementById('burger')?.addEventListener('click', () => {
-  document.getElementById('mobileNav').classList.toggle('open');
-});
-window.addEventListener('mousemove', e => {
+/* Mobile menu */
+const burger = document.getElementById('burger');
+const mobileNav = document.getElementById('mobileNav');
+burger?.addEventListener('click', () => mobileNav.classList.toggle('open'));
+mobileNav?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+
+/* Cursor glow */
+const glow = document.getElementById('glow');
+window.addEventListener('mousemove', (e) => {
   glow.style.left = e.clientX + 'px';
   glow.style.top  = e.clientY + 'px';
 });
-document.querySelectorAll('.card.copy').forEach(card => {
-  card.addEventListener('click', () => copyText(card.dataset.copy));
-});
-function showToast(msg){
-  const t=document.getElementById('toast');
-  const tt=document.getElementById('toastText');
-  tt.textContent=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),1400);
-}
-async function copyText(text){
-  if(!text) return;
-  try{await navigator.clipboard.writeText(text);}catch{}
-  showToast('Скопировано!');
-}
-</script>
 
-<div class="toast" id="toast"><i>✓</i><span id="toastText">Скопировано!</span></div>
+/* Reveal on scroll */
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if(en.isIntersecting) en.target.classList.add('show');
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => io.observe(el));
+
+/* Toast */
+const toast = document.getElementById('toast');
+const toastText = document.getElementById('toastText');
+let toastTimer = null;
+function showToast(text){
+  toastText.textContent = text;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 1400);
+}
+
+/* Copy support */
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast('Скопировано!');
+  }catch{
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    showToast('Скопировано!');
+  }
+}
+
+document.querySelectorAll('.card.copy').forEach(card => {
+  const value = card.dataset.copy || '';
+  const btn = card.querySelector('.copy-btn');
+
+  card.addEventListener('click', (e) => {
+    // чтобы клик по кнопке не “дважды” срабатывал — всё равно копируем один раз
+    copyText(value);
+  });
+
+  btn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    copyText(value);
+  });
+});
+</script>
 
 </body>
 </html>
