@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Domik — Артем</title>
+
+<style>
+:root{
+  --accent:#ff8c1a;
+  --accent2:#ff4d00;
+  --bg:#050505;
+  --glass:rgba(18,18,18,.62);
+  --glass2:rgba(18,18,18,.78);
+  --border:rgba(255,255,255,.10);
+  --muted:#a9a9a9;
+  --text:#fff;
+  --shadow: 0 20px 60px rgba(0,0,0,.55);
+  --glow: 0 0 30px rgba(255,140,26,.35);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  background: var(--bg);
+  overflow-x:hidden;
+}
+
+/* ===== Animated background ===== */
+.bg{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background:
+    radial-gradient(900px 600px at 15% 10%, rgba(255,140,26,.12), transparent 60%),
+    radial-gradient(900px 600px at 80% 20%, rgba(255,77,0,.10), transparent 60%),
+    radial-gradient(900px 600px at 60% 90%, rgba(255,140,26,.10), transparent 60%),
+    linear-gradient(180deg, #060606, #000);
+}
+
+.orbs{
+  position:fixed;
+  inset:-10%;
+  z-index:-1;
+  filter: blur(40px);
+  opacity:.85;
+  pointer-events:none;
+}
+.orb{
+  position:absolute;
+  width:520px;height:520px;
+  border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,140,26,.55), rgba(255,77,0,.08) 65%, transparent 70%);
+  animation: float 12s ease-in-out infinite;
+}
+.orb:nth-child(2){
+  width:640px;height:640px;
+  left:55%; top:10%;
+  background: radial-gradient(circle at 40% 40%, rgba(255,77,0,.45), rgba(255,140,26,.10) 62%, transparent 70%);
+  animation-duration: 16s;
+}
+.orb:nth-child(3){
+  width:480px;height:480px;
+  left:25%; top:65%;
+  background: radial-gradient(circle at 35% 35%, rgba(255,140,26,.38), rgba(255,77,0,.10) 62%, transparent 70%);
+  animation-duration: 14s;
+}
+@keyframes float{
+  0%{ transform: translate3d(-20px,-10px,0) scale(1); }
+  50%{ transform: translate3d(30px,20px,0) scale(1.06); }
+  100%{ transform: translate3d(-20px,-10px,0) scale(1); }
+}
+
+/* ===== Cursor glow ===== */
+.cursor-glow{
+  position:fixed;
+  width:520px;height:520px;
+  border-radius:50%;
+  background: radial-gradient(circle, rgba(255,140,26,.20), transparent 60%);
+  pointer-events:none;
+  z-index:-1;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+}
+
+/* ===== Header ===== */
+header{
+  position:sticky;
+  top:0;
+  z-index:30;
+  backdrop-filter: blur(14px);
+  background: rgba(7,7,7,.55);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.topbar{
+  max-width:1180px;
+  margin:auto;
+  padding:18px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  letter-spacing:.3px;
+  user-select:none;
+}
+.badge{
+  width:40px;height:40px;
+  border-radius:14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: var(--glow);
+  display:grid;
+  place-items:center;
+  color:#070707;
+  font-weight:1000;
+}
+.brand span{
+  font-size:20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+nav{
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+nav a{
+  color:var(--muted);
+  text-decoration:none;
+  font-size:14px;
+  position:relative;
+  padding:8px 8px;
+  border-radius:10px;
+}
+nav a:hover{
+  color:#fff;
+  background: rgba(255,255,255,.06);
+}
+.actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.btn{
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+  color:#fff;
+  padding:10px 12px;
+  border-radius:14px;
+  font-size:14px;
+  cursor:pointer;
+  transition:.25s;
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  text-decoration:none;
+}
+.btn:hover{ transform: translateY(-2px); border-color: rgba(255,140,26,.55); box-shadow: var(--glow); }
+.btn.primary{
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color:#0a0a0a;
+  border:0;
+  font-weight:800;
+}
+
+/* Mobile menu */
+.burger{
+  display:none;
+  width:44px;height:44px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  cursor:pointer;
+}
+.burger:active{ transform: scale(.98); }
+.burger span{
+  display:block;
+  width:18px;height:2px;
+  background:#fff;
+  margin:5px auto;
+  border-radius:2px;
+}
+.mobile-nav{
+  display:none;
+  padding:10px 18px 18px;
+  max-width:1180px;
+  margin:auto;
+}
+.mobile-nav a{
+  display:block;
+  padding:12px 12px;
+  margin-top:10px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  border-radius:14px;
+  color:#fff;
+  text-decoration:none;
+}
+.mobile-nav a:hover{ border-color: rgba(255,140,26,.55); box-shadow: var(--glow); }
+
+/* ===== Layout ===== */
+.container{
+  max-width:1180px;
+  margin:auto;
+  padding:26px 18px 0;
+}
+section{ margin-top:84px; }
+h2{
+  margin:0 0 26px;
+  font-size:30px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* ===== Hero ===== */
+.hero{
+  margin-top:28px;
+  display:grid;
+  grid-template-columns: 1.25fr .75fr;
+  gap:22px;
+  align-items:stretch;
+}
+.hero-card{
+  background: var(--glass);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:28px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+  position:relative;
+  overflow:hidden;
+}
+.hero-card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: radial-gradient(700px 300px at 10% 10%, rgba(255,140,26,.18), transparent 60%);
+  opacity:.9;
+}
+.hero-card > *{ position:relative; }
+.kicker{
+  display:inline-flex;
+  gap:10px;
+  align-items:center;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.06);
+  color: #f0f0f0;
+  font-size:13px;
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background: #44ff8a;
+  box-shadow: 0 0 16px rgba(68,255,138,.45);
+}
+.hero h1{
+  margin:14px 0 10px;
+  font-size:44px;
+  line-height:1.05;
+}
+.hero p{
+  margin:0;
+  color:#d8d8d8;
+  line-height:1.8;
+  font-size:15px;
+}
+.hero-actions{
+  margin-top:18px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:18px;
+}
+.chip{
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+  color: var(--muted);
+  font-size:13px;
+}
+
+/* ===== Side card ===== */
+.side{
+  display:grid;
+  gap:14px;
+}
+.side .mini{
+  background: var(--glass2);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:24px;
+  padding:18px;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
+}
+.mini-title{
+  font-weight:900;
+  margin:0 0 8px;
+}
+.stat{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 12px;
+  margin-top:10px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+}
+.stat b{ color:#fff; }
+.stat span{ color: var(--muted); }
+
+/* ===== Grid cards ===== */
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap:18px;
+}
+.card{
+  background: var(--glass);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  padding:18px;
+  backdrop-filter: blur(14px);
+  transition:.28s;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(120deg, transparent, rgba(255,140,26,.12), transparent);
+  opacity:0;
+  transition:.28s;
+}
+.card:hover::before{ opacity:1; }
+.card:hover{
+  transform: translateY(-8px);
+  border-color: rgba(255,140,26,.55);
+  box-shadow: var(--glow);
+}
+.card h4{ margin:0 0 8px; font-size:16px; }
+.card p, .card a{
+  margin:0;
+  color: var(--muted);
+  font-size:13px;
+  line-height:1.5;
+  word-break: break-all;
+  text-decoration:none;
+}
+.card a:hover{ color:#fff; }
+
+/* Copy + link styles */
+.card.copy{ cursor:pointer; }
+.row{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.copy-btn{
+  flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color:#fff;
+  border-radius:14px;
+  padding:8px 10px;
+  font-size:12px;
+  cursor:pointer;
+  transition:.2s;
+}
+.copy-btn:hover{ border-color: rgba(255,140,26,.55); box-shadow: var(--glow); transform: translateY(-1px); }
+.card.copy small{
+  display:block;
+  color:#7f7f7f;
+  margin-top:10px;
+  font-size:11px;
+}
+
+/* Contacts */
+.contact{
+  display:flex; gap:12px; align-items:center;
+}
+.icon{
+  width:48px;height:48px;border-radius:16px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: var(--glow);
+  display:grid; place-items:center;
+  color:#0b0b0b;
+  font-weight:1000;
+}
+
+/* Reveal animations */
+.reveal{ opacity:0; transform: translateY(22px); transition: .7s ease; }
+.reveal.show{ opacity:1; transform: translateY(0); }
+
+/* Toast */
+.toast{
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15,15,15,.85);
+  border: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(14px);
+  padding: 12px 14px;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  display:flex;
+  gap:10px;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition: .25s;
+  z-index:60;
+}
+.toast.show{ opacity:1; transform: translateX(-50%) translateY(-6px); }
+.toast i{
+  width:26px;height:26px;border-radius:10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display:grid; place-items:center;
+  color:#0b0b0b;
+  font-style:normal;
+  font-weight:900;
+}
+
+footer{
+  margin-top:90px;
+  padding:44px 18px;
+  text-align:center;
+  color:#6f6f6f;
+  font-size:13px;
+  border-top:1px solid rgba(255,255,255,.06);
+  background: rgba(0,0,0,.25);
+}
+
+/* Responsive */
+@media (max-width: 920px){
+  .hero{ grid-template-columns: 1fr; }
+  .hero h1{ font-size: 38px; }
+  nav{ display:none; }
+  .burger{ display:block; }
+  .mobile-nav{ display:none; }
+  .mobile-nav.open{ display:block; }
+}
+</style>
+</head>
+
+<body>
+<div class="bg"></div>
+<div class="orbs">
+  <div class="orb" style="left:-6%; top:5%"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+<div class="cursor-glow" id="glow"></div>
+
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="badge">D</div>
+      <span>Domik</span>
+    </div>
+
+    <nav>
+      <a href="#about">Обо мне</a>
+      <a href="#support">Поддержка</a>
+      <a href="#system">Система</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+
+    <div class="actions">
+      <a class="btn" href="#support">💸 Донат</a>
+      <a class="btn primary" href="https://t.me/domikteam1" target="_blank" rel="noreferrer">📣 Telegram</a>
+      <button class="burger" id="burger" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#about">Обо мне</a>
+    <a href="#support">Поддержка</a>
+    <a href="#system">Система</a>
+    <a href="#contacts">Контакты</a>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-card reveal show" id="about">
+      <div class="kicker"><span class="dot"></span> Онлайн-вайб • CS2 • Общение</div>
+      <h1>Артем<br><span style="color:#fff; opacity:.9">aka</span> <span style="background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Domik</span></h1>
+      <p>
+        Привет! Меня зовут Артем, в сети я известен как <b>Domik</b>.
+        Провожу стримы, играю в CS2, много общаюсь с чатом и создаю ламповую атмосферу.
+        <br><br>
+        Здесь ты можешь узнать больше обо мне, поддержать стрим или связаться напрямую.
+        Спасибо, что ты здесь 🧡
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn primary" href="#support">💳 Поддержать</a>
+        <a class="btn" href="https://t.me/+YrEYNQy0OBYzYzg0" target="_blank" rel="noreferrer">💬 Чат</a>
+        <a class="btn" href="https://www.tiktok.com/@domikteam" target="_blank" rel="noreferrer">🎥 TikTok</a>
+      </div>
+
+      <div class="chips">
+        <div class="chip">🎮 CS2: aim + chill</div>
+        <div class="chip">🧡 Комьюнити: DomikTeam</div>
+        <div class="chip">⚡ Стримы: регулярно</div>
+        <div class="chip">✨ Атмосфера: лампово</div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="mini reveal">
+        <p class="mini-title">Быстрые ссылки</p>
+        <div class="stat"><b>Telegram</b><span>t.me/domikteam1</span></div>
+        <div class="stat"><b>Chat</b><span>Вступить</span></div>
+        <div class="stat"><b>TikTok</b><span>@domikteam</span></div>
+      </div>
+
+      <div class="mini reveal">
+        <p class="mini-title">Плашка стримера</p>
+        <div class="stat"><b>Ник</b><span>Domik</span></div>
+        <div class="stat"><b>Контент</b><span>CS2 + общение</span></div>
+        <div class="stat"><b>Стиль</b><span>ламповый</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPORT -->
+  <section id="support" class="reveal">
+    <h2>Поддержать Domik</h2>
+    <div class="grid">
+
+      <div class="card copy" data-copy="DWQSsLZ1JYty7LHe2f11FKGFpx9bGenQ1SAqdGpPFUFX">
+        <div class="row">
+          <h4>Solana</h4>
+          <button class="copy-btn" type="button">Копировать</button>
+        </div>
+        <p>DWQSsLZ1JYty7LHe2f11FKGFpx9bGenQ1SAqdGpPFUFX</p>
+        <small>Нажми по карточке или по кнопке — адрес скопируется.</small>
+      </div>
+
+      <div class="card copy" data-copy="bc1qkztctt0m825q0y0alqfhagvg2mqh6uwwhfgdah">
+        <div class="row">
+          <h4>Bitcoin (BTC)</h4>
+          <button class="copy-btn" type="button">Копировать</button>
+        </div>
+        <p>bc1qkztctt0m825q0y0alqfhagvg2mqh6uwwhfgdah</p>
+        <small>Поддержка на развитие стримов и контента.</small>
+      </div>
+
+      <a class="card" href="https://donatepay.ru/don/1451218" target="_blank" rel="noreferrer">
+        <h4>DonatePay</h4>
+        <p>Кликабельно — откроется донат-страница</p>
+      </a>
+
+      <a class="card" href="https://www.donationalerts.com/r/domik122" target="_blank" rel="noreferrer">
+        <h4>DonationAlerts</h4>
+        <p>Кликабельно — донат с сообщением на стриме</p>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SYSTEM -->
+  <section id="system" class="reveal">
+    <h2>Игровая система</h2>
+    <div class="grid">
+      <div class="card"><h4>Процессор</h4><p>Intel(R) Core(TM) i7-14700F</p></div>
+      <div class="card"><h4>Видеокарта</h4><p>NVIDIA GeForce RTX 4070 SUPER</p></div>
+      <div class="card"><h4>Материнка</h4><p>ASUS TUF Gaming B760M-PLUS WiFi II</p></div>
+      <div class="card"><h4>Накопитель</h4><p>Samsung SSD 990 PRO 1 TB</p></div>
+      <div class="card"><h4>Блок питания</h4><p>CORSAIR RM850e</p></div>
+    </div>
+  </section>
+
+  <!-- CONTACTS -->
+  <section id="contacts" class="reveal">
+    <h2>Контакты</h2>
+    <div class="grid">
+      <a class="card" href="https://t.me/domikteam1" target="_blank" rel="noreferrer">
+        <div class="contact">
+          <div class="icon">TG</div>
+          <div>
+            <h4>Telegram</h4>
+            <p>t.me/domikteam1</p>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="https://t.me/+YrEYNQy0OBYzYzg0" target="_blank" rel="noreferrer">
+        <div class="contact">
+          <div class="icon">TC</div>
+          <div>
+            <h4>Telegram Chat</h4>
+            <p>Вступить в комьюнити</p>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="https://www.tiktok.com/@domikteam" target="_blank" rel="noreferrer">
+        <div class="contact">
+          <div class="icon">TT</div>
+          <div>
+            <h4>TikTok</h4>
+            <p>@domikteam</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<footer>© Артем (Domik) • 2025</footer>
+
+<div class="toast" id="toast"><i>✓</i><span id="toastText">Скопировано!</span></div>
+
+<script>
+/* Mobile menu */
+const burger = document.getElementById('burger');
+const mobileNav = document.getElementById('mobileNav');
+burger?.addEventListener('click', () => mobileNav.classList.toggle('open'));
+mobileNav?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+
+/* Cursor glow */
+const glow = document.getElementById('glow');
+window.addEventListener('mousemove', (e) => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top  = e.clientY + 'px';
+});
+
+/* Reveal on scroll */
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if(en.isIntersecting) en.target.classList.add('show');
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => io.observe(el));
+
+/* Toast */
+const toast = document.getElementById('toast');
+const toastText = document.getElementById('toastText');
+let toastTimer = null;
+function showToast(text){
+  toastText.textContent = text;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 1400);
+}
+
+/* Copy support */
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast('Скопировано!');
+  }catch{
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    showToast('Скопировано!');
+  }
+}
+
+document.querySelectorAll('.card.copy').forEach(card => {
+  const value = card.dataset.copy || '';
+  const btn = card.querySelector('.copy-btn');
+
+  card.addEventListener('click', (e) => {
+    // чтобы клик по кнопке не “дважды” срабатывал — всё равно копируем один раз
+    copyText(value);
+  });
+
+  btn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    copyText(value);
+  });
+});
+</script>
+
+</body>
+</html>
